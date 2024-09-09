@@ -3,39 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Menu, NotebookPenIcon, Search } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { onAuthStateChanged, signInWithGoogle } from "@/lib/firebase/auth";
-import { useEffect, useState } from "react";
-import { User } from "@firebase/auth";
+import { signInWithGoogle } from "@/lib/firebase/auth";
 import UserDropDown from "./UserDropDown";
 import Link from "next/link";
+import { useAuthContext } from "@/context/AuthContext";
 
-function useUserSession(initialUser: User | null) {
-  const [user, setUser] = useState(initialUser);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged((authUser) => setUser(authUser));
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    onAuthStateChanged((authUser) => {
-      if (user === undefined) return;
-      // refresh when user changed to ease testing
-      if (user?.email !== authUser?.email) {
-        // router.refresh();
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  return user;
-}
-
-interface NavbarProps {
-  initialUser: User | null;
-}
-
-export default function Navbar({ initialUser }: NavbarProps) {
-  const user = useUserSession(initialUser);
+export default function Navbar() {
+  const { user } = useAuthContext();
   console.log(user);
   return (
     <header className="bg-background/10 shadow sticky top-0 backdrop-blur-md">

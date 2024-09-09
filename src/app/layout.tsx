@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/Navbar";
-import { getAuthenticatedAppForUser } from "@/lib/firebase/serverApp";
+import { AuthContextProvider } from "@/context/AuthContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,15 +25,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { currentUser } = await getAuthenticatedAppForUser();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider defaultTheme={"dark"}>
-          <Navbar initialUser={currentUser} />
-          {children}
+          <AuthContextProvider>{children}</AuthContextProvider>
         </ThemeProvider>
       </body>
     </html>
