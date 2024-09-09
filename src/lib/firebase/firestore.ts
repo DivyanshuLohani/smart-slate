@@ -1,19 +1,26 @@
 import { db } from "./clientApp";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { BlogPost } from "../types";
-import { getAuthenticatedAppForUser } from "./serverApp";
+import slugify from "slugify";
 
-export const addBlogToFirestore = async (blogPost: BlogPost): Promise<void> => {
-  const { currentUser } = await getAuthenticatedAppForUser();
-  if (!currentUser) return;
+export const addBlogToFirestore = async (
+  content: string,
+  title: string,
+  user: string,
+  publish: boolean = false
+): Promise<void> => {
   try {
     const blogsCollectionRef = collection(db, "blogs"); // Reference to your blogs collection
 
     const docRef = await addDoc(blogsCollectionRef, {
-      ...blogPost,
-      user: currentUser.uid,
-      created_at: serverTimestamp(), // Use Firestore server timestamp
+      content,
+      title,
+      user,
+      published_at: publish ? serverTimestamp() : null,
+      draft: !publish,
+      slug: slugify(title),
+      created_at: serverTimestamp(),
       edited_at: null,
+      likes: 0,
     });
 
     console.log("Document written with ID: ", docRef.id);

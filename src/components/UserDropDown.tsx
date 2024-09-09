@@ -4,11 +4,13 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { User2 } from "lucide-react";
+import { Layout, LogOut, NotebookPen, Settings, User2 } from "lucide-react";
 import { User } from "@firebase/auth";
 import { signOut } from "@/lib/firebase/auth";
+import Link from "next/link";
 
 interface UserDropDownProps {
   user: User;
@@ -25,8 +27,47 @@ export default function UserDropDown({ user }: UserDropDownProps) {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuItem onClick={signOut}>Sign out</DropdownMenuItem>
+      <DropdownMenuContent className="space-y-2">
+        <DropdownMenuItem>
+          <Link
+            href={`/users/${user.uid}`}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <User2 size={20} /> {user.displayName}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Link
+            href={`/dashboard`}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <Layout size={20} /> Dashboard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link
+            href={`/write`}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <NotebookPen size={20} /> Create a Post
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link
+            href={`/settings`}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <Settings size={20} /> Settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={signOut}
+          className="flex items-center gap-2 cursor-pointer"
+        >
+          <LogOut size={20} color="red" />
+          Sign out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

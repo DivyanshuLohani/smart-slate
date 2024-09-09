@@ -2,15 +2,14 @@
 import { Input } from "@/components/ui/input";
 import { Menu, NotebookPenIcon, Search } from "lucide-react";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { signInWithGoogle } from "@/lib/firebase/auth";
-import UserDropDown from "./UserDropDown";
+import UserDropDown from "../UserDropDown";
 import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
 
 export default function Navbar() {
   const { user } = useAuthContext();
-  console.log(user);
   return (
     <header className="bg-background/10 shadow sticky top-0 backdrop-blur-md">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
