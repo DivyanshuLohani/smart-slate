@@ -1,5 +1,11 @@
 import { db } from "./clientApp";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  getDocs,
+} from "firebase/firestore";
+import { redirect } from "next/navigation";
 import slugify from "slugify";
 
 export const addBlogToFirestore = async (
@@ -11,7 +17,7 @@ export const addBlogToFirestore = async (
   try {
     const blogsCollectionRef = collection(db, "blogs"); // Reference to your blogs collection
 
-    const docRef = await addDoc(blogsCollectionRef, {
+    await addDoc(blogsCollectionRef, {
       content,
       title,
       user,
@@ -23,8 +29,41 @@ export const addBlogToFirestore = async (
       likes: 0,
     });
 
-    console.log("Document written with ID: ", docRef.id);
+    return redirect("/dasboard/posts/");
   } catch (error) {
     console.error("Error adding document: ", error);
   }
 };
+
+export async function getRecentBlogs(user: string) {
+  const blogsCollectionRef = collection(db, "blogs");
+  const querySnapshot = await getDocs(blogsCollectionRef);
+  const blogs = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  return blogs.filter((blog) => blog.user === user);
+}
+
+export async function getBlog(slug: string) {
+  const blogsCollectionRef = collection(db, "blogs");
+  const querySnapshot = await getDocs(blogsCollectionRef);
+  const blogs = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  return blogs.find((blog) => blog.slug === slug);
+}
+
+export async function getPublishedBlogs() {
+  const blogsCollectionRef = collection(db, "blogs");
+  const querySnapshot = await getDocs(blogsCollectionRef);
+  const blogs = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  return blogs.filter((blog) => blog.published_at !== null);
+}

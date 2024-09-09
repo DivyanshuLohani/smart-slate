@@ -8,15 +8,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Layout, LogOut, NotebookPen, Settings, User2 } from "lucide-react";
-import { User } from "@firebase/auth";
 import { signOut } from "@/lib/firebase/auth";
 import Link from "next/link";
+import { useAuthContext } from "@/context/AuthContext";
 
-interface UserDropDownProps {
-  user: User;
-}
-
-export default function UserDropDown({ user }: UserDropDownProps) {
+export default function UserDropDown() {
+  const { user } = useAuthContext();
+  if (!user) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

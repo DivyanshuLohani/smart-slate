@@ -1,52 +1,20 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { getPublishedBlogs } from "@/lib/firebase/firestore";
+import { BlogPost } from "@/lib/types";
 import { Heart, MessageCircle, Bookmark } from "lucide-react";
 import Image from "next/image";
-
-const articles = [
-  {
-    id: 1,
-    title: "Understanding React Hooks: A Comprehensive Guide",
-    author: {
-      name: "Jane Doe",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    description:
-      "Dive deep into React Hooks and learn how they can simplify your code and improve performance.",
-    tags: ["react", "javascript", "webdev"],
-    likes: 142,
-    comments: 28,
-    coverImage: "/placeholder.svg?height=200&width=400",
-  },
-  {
-    id: 2,
-    title: "Building Scalable APIs with Node.js and Express",
-    author: {
-      name: "John Smith",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    description:
-      "Learn best practices for creating robust and scalable APIs using Node.js and Express framework.",
-    tags: ["node", "express", "api"],
-    likes: 98,
-    comments: 15,
-  },
-  {
-    id: 3,
-    title: "CSS Grid: Revolutionizing Web Layouts",
-    author: {
-      name: "Emily Johnson",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    description:
-      "Explore the power of CSS Grid and how it's changing the way we approach web design.",
-    tags: ["css", "webdesign", "layout"],
-    likes: 75,
-    comments: 10,
-    coverImage: "/placeholder.svg?height=200&width=400",
-  },
-];
+import { useEffect, useState } from "react";
 
 export default function BlogHome() {
+  const [articles, setArticles] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    getPublishedBlogs().then((blogs) => {
+      setArticles(blogs);
+      setIsLoading(false);
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8 flex flex-col lg:flex-row">
@@ -56,9 +24,9 @@ export default function BlogHome() {
               key={article.id}
               className="bg-white rounded-lg shadow mb-8 overflow-hidden"
             >
-              {article.coverImage && (
+              {article.cover_image && (
                 <Image
-                  src={article.coverImage}
+                  src={article.cover_image}
                   alt={article.title}
                   width={800}
                   height={400}
@@ -69,9 +37,9 @@ export default function BlogHome() {
                 <h2 className="text-xl md:text-2xl font-bold mb-2">
                   {article.title}
                 </h2>
-                <div className="flex items-center mb-4">
+                {/* <div className="flex items-center mb-4">
                   <Image
-                    src={article.author.avatar}
+                    src={article.avatar}
                     alt={article.author.name}
                     width={40}
                     height={40}
@@ -80,11 +48,11 @@ export default function BlogHome() {
                   <span className="text-gray-600 text-sm md:text-base">
                     {article.author.name}
                   </span>
-                </div>
-                <p className="text-gray-700 mb-4 text-sm md:text-base">
+                </div> */}
+                {/* <p className="text-gray-700 mb-4 text-sm md:text-base">
                   {article.description}
-                </p>
-                <div className="flex flex-wrap mb-4">
+                </p> */}
+                {/* <div className="flex flex-wrap mb-4">
                   {article.tags.map((tag) => (
                     <span
                       key={tag}
@@ -93,18 +61,13 @@ export default function BlogHome() {
                       #{tag}
                     </span>
                   ))}
-                </div>
+                </div> */}
                 <div className="flex items-center text-gray-600">
                   <Button variant="ghost" size="sm" className="mr-4">
                     <Heart className="w-4 h-4 md:w-5 md:h-5 mr-1" />
                     <span className="text-xs md:text-sm">{article.likes}</span>
                   </Button>
-                  <Button variant="ghost" size="sm" className="mr-4">
-                    <MessageCircle className="w-4 h-4 md:w-5 md:h-5 mr-1" />
-                    <span className="text-xs md:text-sm">
-                      {article.comments}
-                    </span>
-                  </Button>
+
                   <Button variant="ghost" size="sm">
                     <Bookmark className="w-4 h-4 md:w-5 md:h-5" />
                   </Button>

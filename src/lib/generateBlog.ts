@@ -17,7 +17,7 @@ const generationConfig = {
 
 export default async function generateBlogPost(
   prompt: string
-): Promise<{ title: string; content: string }> {
+): Promise<string> {
   const chatSession = model.startChat({
     generationConfig,
 
@@ -37,11 +37,11 @@ export default async function generateBlogPost(
     ],
   });
   const result = await chatSession.sendMessage(prompt);
-  console.log(result.response.text());
+  // console.log(result.response.text());
   try {
-    const res = JSON.parse(result.response.text().slice(7, -4));
+    const res = result.response.text();
     return res;
   } catch {
-    return { title: "", content: "" };
+    return "";
   }
 }

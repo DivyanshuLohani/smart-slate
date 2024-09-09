@@ -52,9 +52,9 @@ export default function BlogWritingPage() {
   const handleGenerateContent = async () => {
     setIsGenerating(true);
     setIsDialogOpen(false);
-    const { content, title } = await generateBlogPost(aiPrompt);
+    const content = await generateBlogPost(aiPrompt);
+    console.log(content);
     setContent(content);
-    setTitle(title);
     setIsGenerating(false);
     setAiPrompt("");
   };
